@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+vector_store/*
+data/complaints.csv
+*.ipynb_checkpoints/
+instructions/
