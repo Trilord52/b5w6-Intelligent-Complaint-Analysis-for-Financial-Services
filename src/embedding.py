@@ -41,4 +41,14 @@ class Embedder:
             batch_size=self.batch_size,
             show_progress_bar=True,
             convert_to_numpy=True
-        )) 
+        ))
+
+    def embed_query(self, query: str) -> np.ndarray:
+        """
+        Generates an embedding for a single query string.
+        Args:
+            query (str): The query string.
+        Returns:
+            np.ndarray: Embedding vector.
+        """
+        return np.array(self.model.encode([query], batch_size=1, show_progress_bar=False, convert_to_numpy=True))[0] 
