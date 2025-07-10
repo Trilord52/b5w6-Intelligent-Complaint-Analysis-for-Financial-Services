@@ -1,240 +1,190 @@
-# 🏦 TrustVoice Analytics
-## Intelligent Complaint Analysis for Financial Services
+# 🏦 TrustVoice Analytics: Intelligent Complaint Analysis for Financial Services
 
-A Retrieval-Augmented Generation (RAG) powered chatbot that transforms CFPB complaint data into actionable insights for CrediTrust Financial's internal teams.
+TrustVoice Analytics is an advanced Retrieval-Augmented Generation (RAG) chatbot designed to help CrediTrust Financial turn unstructured customer complaint data into actionable business insights. The system leverages state-of-the-art natural language processing, semantic search, and large language models to empower product, support, and compliance teams to quickly identify pain points, trends, and opportunities across five major financial products.
 
-### 🎯 Business Objective
+---
 
-CrediTrust Financial serves 500,000+ users across East African markets with Credit Cards, Personal Loans, BNPL, Savings Accounts, and Money Transfers. This AI tool empowers product managers, support teams, and compliance officers to quickly identify customer pain points and emerging trends.
+## 🚩 Business Objective
 
-**Key Performance Indicators:**
-- Reduce trend identification time from days to minutes
-- Enable non-technical teams to get insights without data analysts
-- Shift from reactive to proactive problem identification
+CrediTrust Financial operates across East Africa, offering Credit Cards, Personal Loans, Buy Now Pay Later (BNPL), Savings Accounts, and Money Transfers. The company receives thousands of customer complaints monthly. This project delivers an internal AI tool that enables teams to:
+- Instantly analyze and synthesize complaint narratives
+- Surface emerging issues and trends in minutes
+- Make data-driven decisions without technical expertise
 
-### 🏗️ Project Architecture
+---
+
+## 🧩 Solution Overview
+
+TrustVoice Analytics is a modular, production-ready RAG system that:
+- Cleans and preprocesses raw complaint data
+- Chunks long narratives for optimal semantic search
+- Generates vector embeddings and builds a FAISS vector store
+- Retrieves the most relevant complaint excerpts for any user query
+- Uses a powerful LLM to generate concise, context-grounded answers
+- Provides an interactive Gradio web interface for seamless user interaction
+
+---
+
+## 🗂️ Repository Structure
 
 ```
-├── data/                          # Processed complaint data
-├── src/                           # Core RAG pipeline components
-│   ├── chunk_embed_index.py      # Task 2: Chunking, embedding, indexing
-│   ├── rag_pipeline.py           # Task 3: RAG retriever and generator
-│   ├── rag_evaluation.py         # Evaluation framework
-│   ├── embedding.py              # Embedding utilities
-│   ├── vector_store.py           # FAISS vector store operations
-│   └── chunking.py               # Text chunking utilities
-├── vector_store/                  # FAISS index and metadata
-├── app.py                        # Task 4: Interactive Gradio interface
-├── requirements.txt              # Python dependencies
-└── README.md                     # This file
+├── data/                  # Cleaned and raw complaint data (.gitkeep for empty dir)
+├── notebooks/             # EDA and preprocessing notebooks
+├── src/                   # Core RAG pipeline modules
+│   ├── chunk_embed_index.py   # Data cleaning, chunking, embedding, and indexing
+│   ├── rag_pipeline.py        # RAG retriever, prompt engineering, and LLM integration
+│   ├── rag_evaluation.py      # Evaluation framework and quality scoring
+│   ├── embedding.py           # Embedding model utilities
+│   ├── vector_store.py        # FAISS vector store operations and metadata handling
+│   └── chunking.py            # Text chunking utilities
+├── vector_store/          # Persisted FAISS index and metadata
+├── reports/               # Evaluation summary and results
+│   └── evaluation_summary.md
+├── app.py                 # Gradio chat interface for end users
+├── requirements.txt       # Python dependencies
+├── .gitignore
+└── README.md
 ```
 
-### 🚀 Quick Start
+---
 
-1. **Install Dependencies:**
+## ⚡ Quick Start
+
+1. **Install Dependencies**
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Set up API Key:**
-   Create a `.env` file in your project root:
-   ```
-   HF_API_TOKEN=your_huggingface_token_here
-   ```
+2. **Set up API Key**
+   - Create a `.env` file in your project root:
+     ```
+     HF_API_TOKEN=your_huggingface_token_here
+     ```
 
-3. **Run the Interactive Interface:**
+3. **Run the Chatbot Interface**
    ```bash
    python app.py
    ```
-   The interface will be available at `http://localhost:7860`
+   - Access at [http://localhost:7860](http://localhost:7860)
 
-### 🔧 Technical Implementation
+---
 
-#### **Task 1: Data Preprocessing** ✅
-- **Dataset**: CFPB complaint data with 5 product categories
-- **Processing**: Text cleaning, filtering, standardization
-- **Output**: `data/complaints_processed.csv`
+## 🧑‍💻 Project Workflow & Components
 
-#### **Task 2: Vector Database** ✅
-- **Chunking**: 100-word chunks with 20-word overlap
-- **Embedding Model**: `sentence-transformers/all-MiniLM-L6-v2`
-- **Vector Store**: FAISS with metadata storage
-- **Output**: `vector_store/faiss_index.idx` and `vector_store/metadata.pkl`
+### 1. **Data Preprocessing & EDA**
+- **What was done:**
+  - Loaded CFPB complaint data and filtered for five key products.
+  - Performed exploratory data analysis (EDA) to understand product distribution, narrative lengths, and missing data.
+  - Cleaned narratives by lowercasing, removing boilerplate, and filtering out empty entries.
+- **How to run:**
+  - See `notebooks/eda_preprocessing.ipynb` for EDA and cleaning steps.
+  - The script `src/chunk_embed_index.py` automates cleaning and prepares data for chunking and embedding.
+- **Output:**
+  - Cleaned data saved to `data/filtered_complaints.csv`.
 
-#### **Task 3: RAG Pipeline** ✅
-- **Retriever**: Semantic search with top-k retrieval (k=5)
-- **Generator**: Mistral AI Magistral-Small-2506 via FeatherlessAI
-- **Prompt Engineering**: Financial analyst assistant role
-- **Evaluation**: 10 representative questions with quality scoring
+### 2. **Text Chunking, Embedding & Vector Store**
+- **What was done:**
+  - Long complaint narratives are split into overlapping 100-word chunks for better semantic search.
+  - Each chunk is embedded using the `sentence-transformers/all-MiniLM-L6-v2` model, chosen for its speed and semantic accuracy.
+  - Embeddings and metadata (complaint ID, product) are stored in a FAISS vector database for fast similarity search.
+- **How to run:**
+  - Execute `python src/chunk_embed_index.py` to process, chunk, embed, and index the data.
+- **Output:**
+  - Vector store files in `vector_store/` (e.g., `faiss_index.idx`, `metadata.pkl`).
 
-#### **Task 4: Interactive Interface** ✅
-- **Framework**: Gradio web interface
-- **Features**: 
-  - Text input for questions
+### 3. **RAG Core Logic: Retrieval, Prompting & Generation**
+- **What was done:**
+  - Developed a retriever that embeds user questions and fetches the top-5 most relevant complaint chunks from the vector store.
+  - Designed a prompt template that instructs the LLM to act as a financial analyst, use only the provided context, and admit when information is missing.
+  - Integrated a large language model (default: `mistralai/Magistral-Small-2506` via Hugging Face Inference API) to generate answers grounded in retrieved context.
+- **How to run:**
+  - Use `src/rag_pipeline.py` to test retrieval and answer generation.
+  - The prompt and model can be customized in this script.
+- **Output:**
+  - Answers with cited sources, ready for display in the UI or evaluation.
+
+### 4. **Evaluation Framework**
+- **What was done:**
+  - Created a robust evaluation script (`src/rag_evaluation.py`) to test the system on 10 representative business questions.
+  - Each answer is scored for quality, completeness, and source attribution.
+  - Results are summarized in Markdown and CSV for easy reporting.
+- **How to run:**
+  - Execute `python src/rag_evaluation.py`.
+- **Output:**
+  - Evaluation summary in `reports/evaluation_summary.md`.
+
+### 5. **Interactive Chat Interface**
+- **What was done:**
+  - Built a Gradio web app (`app.py`) for internal users to ask questions and receive synthesized, evidence-backed answers.
+  - The interface features a text input, submit and clear buttons, answer display, and source chunk display for transparency.
+  - Designed for ease of use by non-technical staff.
+- **How to run:**
+  - Start with `python app.py` and open the provided local URL.
+- **Features:**
   - Real-time answer generation
-  - Source attribution display
+  - Source attribution for trust
   - Conversation history
-  - Clear functionality
+  - Clear/reset functionality
 
-### 🤖 Model Selection
+---
 
-#### **Embedding Model**
-- **Model**: `sentence-transformers/all-MiniLM-L6-v2`
-- **Reason**: Fast, lightweight, good semantic understanding
-- **Performance**: Optimized for CPU/GPU with mixed precision
+## 📊 Evaluation & Results
 
-#### **Language Model**
-- **Model**: `mistralai/Magistral-Small-2506`
-- **Provider**: FeatherlessAI (Hugging Face Inference API)
-- **Capabilities**: 
-  - 24B parameters with reasoning capabilities
-  - 128k context window (recommended: 40k)
-  - Multilingual support
-  - Apache 2.0 license
+- **Average Quality Score:** 4.5/5 (see `reports/evaluation_summary.md`)
+- **Success Rate:** 100% (10/10 business questions answered)
+- **Average Response Time:** 53.35s
+- **Key Improvements:**
+  - Eliminated format errors
+  - Increased answer length and structure
+  - Enhanced context utilization
 
-#### **Changing Models**
-To use a different model, update the `HF_MODEL` variable in `src/rag_pipeline.py`:
-```python
-HF_MODEL = "your-model-name-here"
-```
+---
 
-### 📊 Evaluation Results
+## 🛠️ Troubleshooting & Tips
 
-**Overall Performance:**
-- **Average Quality Score**: 3.80/5
-- **Success Rate**: 100% (10/10 questions processed)
-- **Average Response Time**: 56.29s
-- **High Quality Responses**: 6/10 questions
+- **Model Unavailable?** Try a different model (see below) or check your API token.
+- **Slow Responses?** Hosted LLMs may be slow; use a smaller or local model for speed.
+- **Streaming:** Not enabled by default. For most use cases, full response display is sufficient.
+- **API Errors:** Ensure `.env` is present and contains a valid `HF_API_TOKEN`.
 
-**Quality Distribution:**
-- High Quality (4-5): 6 questions
-- Medium Quality (3): 0 questions
-- Low Quality (1-2): 4 questions
+---
 
-**Top Performing Questions:**
-1. "Why are people unhappy with Buy Now, Pay Later?" (5/5)
-2. "What are the main issues with Credit Cards?" (5/5)
-3. "What are the most common customer service issues?" (5/5)
+## 🤖 Model Selection & Customization
 
-### 💡 Usage Examples
+- **Embedding:** `sentence-transformers/all-MiniLM-L6-v2` (fast, accurate, open-source)
+- **LLM:** `mistralai/Magistral-Small-2506` (default)
+- **Alternative Models:**
+  - `gpt2`, `distilgpt2`, `tiiuae/falcon-7b-instruct`, or any Hugging Face Inference API-compatible model
+- **To change model:** Edit `HF_MODEL` in `src/rag_pipeline.py`
 
-#### **Product-Specific Analysis**
-```
-Q: Why are people unhappy with Buy Now, Pay Later?
-A: Based on complaint analysis, main issues include late fees, 
-   misleading offers, loss of trust, poor customer service, 
-   and perceived exploitation of customers.
-```
+---
 
-#### **Cross-Product Insights**
-```
-Q: What are the most common customer service issues?
-A: Lack of responsiveness, inability to speak with live 
-   representatives, ineffective problem-solving, and 
-   overall poor service quality across all products.
-```
-
-#### **Business Intelligence**
-```
-Q: What emerging trends should product managers be aware of?
-A: Customer expectations for transparency, regulatory 
-   compliance risks, internal communication gaps, and 
-   the need for proactive issue management.
-```
-
-### 🔍 API Configuration
-
-#### **Hugging Face Inference Setup**
-1. Create account at [Hugging Face](https://huggingface.co)
-2. Generate API token in Settings → Access Tokens
-3. Add token to `.env` file as `HF_API_TOKEN`
-
-#### **Alternative Models**
-If you encounter issues with the default model, try:
-- `gpt2` (always available)
-- `distilgpt2` (lightweight)
-- `tiiuae/falcon-7b-instruct` (if available)
-- Local models via transformers library
-
-### 🛠️ Troubleshooting & Tips
-
-- **Model Unavailable?** If the default LLM is not available via Hugging Face Inference, try switching to a different model (see 'Alternative Models' above) or check your API token permissions.
-- **Slow Responses?** Hosted LLMs may be slow. For faster responses, consider running a local model or using a smaller model.
-- **Streaming:** Token-by-token streaming is not enabled by default. For most business use cases, full response display is sufficient. If you wish to enable streaming, see Gradio documentation for guidance.
-- **API Errors:** Ensure your `.env` file is present and contains a valid `HF_API_TOKEN`.
-
-### 🛠️ Development
-
-#### **Running Individual Components**
-```bash
-# Test RAG pipeline
-python src/rag_pipeline.py
-
-# Run evaluation
-python src/rag_evaluation.py
-
-# Rebuild vector store
-python src/chunk_embed_index.py
-```
-
-#### **Custom Questions**
-Add your own questions to `src/rag_evaluation.py`:
-```python
-CUSTOM_QUESTIONS = [
-    "Your question here?",
-    "Another question?",
-]
-```
-
-### 📈 Performance Optimization
-
-#### **Response Time**
-- Average: 56.29s (acceptable for business use)
-- Optimization: Consider local model deployment for faster responses
-
-#### **Quality Improvements**
-- Prompt engineering refinements
-- Source retrieval optimization
-- Model parameter tuning
-
-### 🔒 Security & Privacy
-
-- API keys stored in environment variables
-- No sensitive data in code repository
-- Local processing of complaint data
-- Secure API communication
-
-### 📝 Reporting
-
-The system generates comprehensive reports:
-- `rag_evaluation_results.csv`: Detailed evaluation data
-- `evaluation_summary.md`: Performance summary
-- Interactive interface for real-time analysis
-
-### 🤝 Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for improvements, bug fixes, or new features.
 
-### 📄 License
+---
+
+## 📄 License
 
 This project is licensed under the Apache 2.0 License. See the LICENSE file for details.
 
-### 📚 References
+---
+
+## 📚 References
 
 - [CFPB Complaint Database](https://www.consumerfinance.gov/data-research/consumer-complaints/)
 - [Hugging Face Inference API](https://huggingface.co/docs/huggingface_hub/v0.21.4/en/inference)
 - [Mistral AI Documentation](https://huggingface.co/mistralai/Magistral-Small-2506)
 - [Gradio Documentation](https://www.gradio.app/docs)
-
-### 🏆 Project Status
-
-- ✅ **Task 1**: EDA and Preprocessing - Complete
-- ✅ **Task 2**: Vector Database - Complete  
-- ✅ **Task 3**: RAG Pipeline - Complete
-- ✅ **Task 4**: Interactive Interface - Complete
-
-**Ready for production use and further development!**
+- [FAISS](https://github.com/facebookresearch/faiss)
+- [LangChain](https://github.com/langchain-ai/langchain)
 
 ---
 
-*Developed for 10 Academy KAIM 5 Week 6 Challenge | CrediTrust Financial*
+## 🏆 Project Status
+
+- ✅ **Data Preprocessing & EDA:** Complete
+- ✅ **Chunking, Embedding & Vector Store:** Complete
+- ✅ **RAG Core Logic & Evaluation:** Complete
+- ✅ **Interactive Chat Interface:** Complete
