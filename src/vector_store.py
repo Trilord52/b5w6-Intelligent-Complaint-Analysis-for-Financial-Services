@@ -41,3 +41,19 @@ class VectorStore:
         store.index = index
         store.metadata = metadata
         return store 
+
+    def similarity_search(self, query_embedding: np.ndarray, k: int = 5):
+        """
+        Performs a similarity search for the query embedding and returns top-k metadata and scores.
+        Args:
+            query_embedding (np.ndarray): Embedding vector for the query (1D or 2D).
+            k (int): Number of top results to return.
+        Returns:
+            List[Dict]: List of metadata dicts for top-k results.
+            List[float]: List of distances (lower = more similar).
+        """
+        if query_embedding.ndim == 1:
+            query_embedding = query_embedding[np.newaxis, :]
+        distances, indices = self.index.search(query_embedding.astype(np.float32), k)
+        results = [self.metadata[i] for i in indices[0]]
+        return results, distances[0].tolist() 
