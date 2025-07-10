@@ -156,6 +156,13 @@ If you encounter issues with the default model, try:
 - `tiiuae/falcon-7b-instruct` (if available)
 - Local models via transformers library
 
+### 🛠️ Troubleshooting & Tips
+
+- **Model Unavailable?** If the default LLM is not available via Hugging Face Inference, try switching to a different model (see 'Alternative Models' above) or check your API token permissions.
+- **Slow Responses?** Hosted LLMs may be slow. For faster responses, consider running a local model or using a smaller model.
+- **Streaming:** Token-by-token streaming is not enabled by default. For most business use cases, full response display is sufficient. If you wish to enable streaming, see Gradio documentation for guidance.
+- **API Errors:** Ensure your `.env` file is present and contains a valid `HF_API_TOKEN`.
+
 ### 🛠️ Development
 
 #### **Running Individual Components**
@@ -206,11 +213,11 @@ The system generates comprehensive reports:
 
 ### 🤝 Contributing
 
-1. Follow the modular code structure
-2. Add comprehensive documentation
-3. Include error handling
-4. Test with evaluation framework
-5. Update requirements.txt for new dependencies
+Contributions are welcome! Please open an issue or submit a pull request for improvements, bug fixes, or new features.
+
+### 📄 License
+
+This project is licensed under the Apache 2.0 License. See the LICENSE file for details.
 
 ### 📚 References
 
