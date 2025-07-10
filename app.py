@@ -126,7 +126,8 @@ def create_interface():
                 chatbot = gr.Chatbot(
                     label="Conversation History",
                     height=400,
-                    show_label=True
+                    show_label=True,
+                    type="messages"
                 )
                 
                 # Input area
@@ -194,9 +195,7 @@ if __name__ == "__main__":
     # Create and launch the interface
     interface = create_interface()
     interface.launch(
-        server_name="0.0.0.0",
-        server_port=7860,
+        server_port=7862,
         share=False,
-        show_error=True,
-        title="TrustVoice Analytics"
+        show_error=True
     )

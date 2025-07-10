@@ -4,9 +4,9 @@ Evaluation framework for the RAG pipeline with representative questions and qual
 """
 import pandas as pd
 from typing import List, Dict, Any
-from rag_pipeline import retrieve_relevant_chunks, generate_answer
-from embedding import Embedder
-from vector_store import VectorStore
+from .rag_pipeline import retrieve_relevant_chunks, generate_answer
+from .embedding import Embedder
+from .vector_store import VectorStore
 import time
 
 # Representative questions for evaluation
